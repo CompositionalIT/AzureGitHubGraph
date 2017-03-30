@@ -1,0 +1,19 @@
+GENERATE-LOAD-SCRIPTS: ON
+FRAMEWORK: NET452
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Microsoft.Azure.KeyVault.Core (2.0.4)
+    Microsoft.Data.Edm (5.8.2)
+    Microsoft.Data.OData (5.8.2)
+      Microsoft.Data.Edm (5.8.2)
+      System.Spatial (5.8.2)
+    Microsoft.Data.Services.Client (5.8.2)
+      Microsoft.Data.OData (5.8.2)
+    Newtonsoft.Json (10.0.1)
+    Octokit (0.24)
+    System.Spatial (5.8.2)
+    WindowsAzure.Storage (8.1.1)
+      Microsoft.Azure.KeyVault.Core (>= 1.0)
+      Microsoft.Data.OData (>= 5.8.2)
+      Microsoft.Data.Services.Client (>= 5.8.2)
+      Newtonsoft.Json (>= 6.0.8)
