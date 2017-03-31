@@ -11,7 +11,7 @@ let makeEntity partitionKey rowKey properties =
 /// Pass a maximum of 100 values
 let insertOrReplaceManyUnsafe keysValues table =
     let batch = TableBatchOperation()
-    for (partitionKey, rowKey, properties) in keysValues do
+    for ((partitionKey, rowKey), properties) in keysValues do
         batch.InsertOrReplace(makeEntity partitionKey rowKey properties)
     (table:CloudTable).ExecuteBatch batch
 
@@ -36,3 +36,9 @@ let retrieveRow partitionKey rowKey table =
     |> function
         | :? DynamicTableEntity as out -> Some out
         | _ -> None
+
+let partitionKeyStartsWith str =
+    TableQuery.CombineFilters(
+        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.GreaterThanOrEqual, sprintf "%s%c" str System.Char.MinValue),
+        TableOperators.And,
+        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.LessThanOrEqual, sprintf "%s%c" str System.Char.MaxValue))

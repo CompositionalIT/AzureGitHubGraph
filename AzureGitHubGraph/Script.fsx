@@ -5,6 +5,7 @@
 #load "GitHubGraph.fs"
 
 open System.IO
+open Graph
 open GitHubGraph
 open Microsoft.WindowsAzure.Storage.Queue
 
@@ -26,3 +27,5 @@ queue.FetchAttributes(); queue.ApproximateMessageCount
 // deleteData storageAccountConnectionString
 
 GitHub.getRateLimit ()
+
+let prashLinks = User "theprash" |> retrieveItemLinks graphTable |> Seq.toArray

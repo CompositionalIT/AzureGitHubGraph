@@ -1,7 +1,9 @@
 ﻿module GitHubGraph
 
+open Graph
 open Microsoft.WindowsAzure.Storage
 open Microsoft.WindowsAzure.Storage.Queue
+open Microsoft.WindowsAzure.Storage.Table
 
 let setup storageAccountConnectionString =
     let azureStorageAccount = CloudStorageAccount.Parse storageAccountConnectionString
@@ -22,6 +24,12 @@ let deleteData storageAccountConnectionString =
     graphTable.DeleteIfExistsAsync() |> Async.AwaitTask |> Async.RunSynchronously |> ignore
     completedTable.DeleteIfExistsAsync() |> Async.AwaitTask |> Async.RunSynchronously |> ignore
     queue.ClearAsync() |> Async.AwaitTask |> Async.RunSynchronously
+
+let tryMakeLink (e:DynamicTableEntity) = Link.FromKeys(e.PartitionKey, e.RowKey)
+
+let retrieveItemLinks table item =
+    (table:CloudTable).ExecuteQuery(TableQuery().Where(Table.partitionKeyStartsWith (((item:Item).Key) + ":")))
+    |> Seq.choose tryMakeLink
 
 let processMessage storageAccountConnectionString =
     let (graphTable, completedTable, queue) = setup storageAccountConnectionString
